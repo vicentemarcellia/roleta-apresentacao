@@ -6,45 +6,44 @@
 <title>Roleta da Apresentação</title>
 
 <style>
-body {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #fff8dc, #ffe4b5);
+body{
+    text-align:center;
+    font-family:Arial;
+    background:#e8d9b5;
 }
 
-h1 {
-    color: #ff6600;
+h1{
+    color:#ff6600;
 }
 
-.roleta-container {
-    position: relative;
-    width: 420px;
-    height: 420px;
-    margin: 20px auto;
+.roleta-container{
+    position:relative;
+    width:420px;
+    height:420px;
+    margin:20px auto;
 }
 
-.ponteiro {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 40px solid red;
-    z-index: 10;
+.ponteiro{
+    position:absolute;
+    top:-20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:20px solid transparent;
+    border-right:20px solid transparent;
+    border-top:40px solid red;
+    z-index:10;
 }
 
-.roleta {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 8px solid #ff9933;
-    position: relative;
-    transition: transform 4s ease-out;
-    transform: rotate(-90deg); /* 🔥 Alinha início no topo */
-    background: conic-gradient(
+.roleta{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:8px solid #f28c28;
+    position:relative;
+    transition:transform 4s cubic-bezier(.17,.67,.83,.67);
+    background:conic-gradient(
         #ff9999 0deg 60deg,
         #99ccff 60deg 120deg,
         #99ff99 120deg 180deg,
@@ -54,35 +53,34 @@ h1 {
     );
 }
 
-.label {
-    position: absolute;
-    width: 140px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 14px;
-    top: 50%;
-    left: 50%;
-    transform-origin: 0 0;
-    pointer-events: none;
+.label{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform-origin:0 0;
+    width:150px;
+    text-align:center;
+    font-weight:bold;
+    font-size:14px;
 }
 
-button {
-    margin-top: 20px;
-    padding: 12px 25px;
-    font-size: 18px;
-    background-color: #ff6600;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
+button{
+    margin-top:20px;
+    padding:12px 25px;
+    font-size:18px;
+    background:#ff6600;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
 }
 
-.resultado {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #cc3300;
-    min-height: 40px;
+.resultado{
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+    color:#cc3300;
+    min-height:30px;
 }
 </style>
 </head>
@@ -97,66 +95,62 @@ button {
 </div>
 
 <button onclick="girar()">Girar 🎉</button>
-
 <div class="resultado" id="resultado"></div>
 
 <script>
-const opcoes = [
-    "💃 Apresente-se dançando",
-    "🤗 Cumprimente com abraço",
-    "🐶 Fale seu animal favorito",
-    "🦘 Pule dizendo seu nome",
-    "🤸 Faça 2 polichinelos",
-    "❤️ Diga algo que ama"
+const opcoes=[
+"💃 Apresente-se dançando",
+"🤗 Cumprimente com abraço",
+"🐶 Fale seu animal favorito",
+"🦘 Pule dizendo seu nome",
+"🤸 Faça 2 polichinelos",
+"❤️ Diga algo que ama"
 ];
 
-const roleta = document.getElementById("roleta");
-const total = opcoes.length;
-const anguloFatia = 360 / total;
+const roleta=document.getElementById("roleta");
+const total=opcoes.length;
+const anguloFatia=360/total;
 
-// 🔥 Criar textos CENTRALIZADOS corretamente
-for (let i = 0; i < total; i++) {
+// posicionar textos corretamente
+for(let i=0;i<total;i++){
 
-    const label = document.createElement("div");
-    label.className = "label";
+    const label=document.createElement("div");
+    label.className="label";
 
-    const angulo = i * anguloFatia + anguloFatia / 2;
+    const angulo=i*anguloFatia+anguloFatia/2;
 
-    label.style.transform =
-        `rotate(${angulo}deg)
-         translate(150px)
-         rotate(90deg)
-         translate(-50%, -50%)`;
+    label.style.transform=
+    `rotate(${angulo}deg)
+     translate(150px)
+     rotate(90deg)
+     translate(-50%,-50%)`;
 
-    label.innerText = opcoes[i];
+    label.innerText=opcoes[i];
     roleta.appendChild(label);
 }
 
-let anguloAtual = -90; // começa alinhado com topo
+let anguloAtual=0;
 
-function girar() {
+function girar(){
 
-    const resultado = document.getElementById("resultado");
-    resultado.innerText = "";
+    const resultado=document.getElementById("resultado");
+    resultado.innerText="";
 
-    const giro = 360 * 5 + Math.random() * 360;
+    const indice=Math.floor(Math.random()*total);
 
-    anguloAtual += giro;
+    const voltas=5*360;
 
-    roleta.style.transform = `rotate(${anguloAtual}deg)`;
+    // ângulo exato para levar a fatia escolhida até o topo
+    const anguloDestino=
+        360-(indice*anguloFatia+anguloFatia/2);
 
-    setTimeout(() => {
+    anguloAtual+=voltas+anguloDestino;
 
-        const anguloNormalizado =
-            ((anguloAtual % 360) + 360) % 360;
+    roleta.style.transform=`rotate(${anguloAtual}deg)`;
 
-        const indice =
-            Math.floor(anguloNormalizado / anguloFatia) % total;
-
-        resultado.innerText =
-            "🎉 Resultado: " + opcoes[indice];
-
-    }, 4000);
+    setTimeout(()=>{
+        resultado.innerText="🎉 Resultado: "+opcoes[indice];
+    },4000);
 }
 </script>
 
