@@ -140,9 +140,9 @@ const resultado = document.getElementById("resultado");
 
 const total = opcoes.length;
 const anguloFatia = 360 / total;
-const raio = 120; // texto mais para dentro
+const raio = 120;
 
-// Criar textos posicionados corretamente
+// === CRIA OS TEXTOS ===
 for (let i = 0; i < total; i++) {
 
     const label = document.createElement("div");
@@ -151,7 +151,6 @@ for (let i = 0; i < total; i++) {
     const angulo = i * anguloFatia + anguloFatia / 2;
 
     let rotacaoTexto = angulo;
-
     if (angulo > 90 && angulo < 270) {
         rotacaoTexto += 180;
     }
@@ -166,19 +165,27 @@ for (let i = 0; i < total; i++) {
     roleta.appendChild(label);
 }
 
-// Função corrigida (sem acumular ângulo)
+// === GIRO CORRIGIDO 100% ===
 function girar() {
 
     resultado.innerText = "";
 
     const indice = Math.floor(Math.random() * total);
 
-    const anguloParaSeta =
-        360 - (indice * anguloFatia + anguloFatia / 2);
-
     const voltas = 5 * 360;
 
-    const anguloFinal = voltas + anguloParaSeta;
+    /*
+      EXPLICAÇÃO IMPORTANTE:
+      - A roleta começa em -90deg (por causa do conic-gradient)
+      - A seta está no topo (0deg visual)
+      - Precisamos compensar isso
+    */
+
+    const anguloCentroFatia =
+        (indice * anguloFatia) + (anguloFatia / 2);
+
+    const anguloFinal =
+        voltas + (450 - anguloCentroFatia);
 
     roleta.style.transform = `rotate(${anguloFinal}deg)`;
 
@@ -187,6 +194,3 @@ function girar() {
     }, 4000);
 }
 </script>
-
-</body>
-</html>
