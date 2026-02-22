@@ -53,12 +53,15 @@ h1 {
     );
 }
 
-.texto {
+.label {
     position: absolute;
     width: 120px;
     text-align: center;
     font-weight: bold;
     font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
 }
 
 button {
@@ -104,16 +107,7 @@ button {
 <div class="roleta-container">
     <div class="ponteiro"></div>
 
-    <div id="roleta" class="roleta">
-
-        <div class="texto" style="top: 20px; left: 150px;">💃 Dançar</div>
-        <div class="texto" style="top: 90px; right: 20px;">🤗 Abraçar</div>
-        <div class="texto" style="bottom: 90px; right: 20px;">🐶 Animal</div>
-        <div class="texto" style="bottom: 20px; left: 150px;">🦘 Pular</div>
-        <div class="texto" style="bottom: 90px; left: 20px;">🤸 Polichinelo</div>
-        <div class="texto" style="top: 90px; left: 20px;">❤️ Coração</div>
-
-    </div>
+    <div id="roleta" class="roleta"></div>
 </div>
 
 <button onclick="girar()">Girar 🎉</button>
@@ -122,31 +116,47 @@ button {
 
 <script>
 const opcoes = [
-    "💃 Apresente-se dançando",
-    "🤗 Apresente-se abraçando um amigo",
-    "🐶 Apresente-se imitando um animal",
-    "🦘 Apresente-se pulando",
-    "🤸 Apresente-se fazendo polichinelo",
-    "❤️ Apresente-se fazendo um coração"
+    "💃 Dançar",
+    "🤗 Abraçar",
+    "🐶 Animal",
+    "🦘 Pular",
+    "🤸 Polichinelo",
+    "❤️ Coração"
 ];
+
+const roleta = document.getElementById("roleta");
+
+// Criar textos corretamente posicionados
+for (let i = 0; i < 6; i++) {
+    const label = document.createElement("div");
+    label.className = "label";
+
+    const angulo = i * 60 + 30; // centraliza no meio da fatia
+    label.style.transform = `
+        rotate(${angulo}deg)
+        translate(140px)
+        rotate(-${angulo}deg)
+    `;
+
+    label.innerText = opcoes[i];
+    roleta.appendChild(label);
+}
 
 let anguloAtual = 0;
 
 function girar() {
-    const roleta = document.getElementById("roleta");
     const resultado = document.getElementById("resultado");
-
     resultado.innerText = "";
 
     const sorteio = Math.floor(Math.random() * 6);
 
-    const anguloExtra = 360 * 5 + (sorteio * 60);
+    const anguloExtra = 360 * 5 + (360 - sorteio * 60 - 30);
     anguloAtual += anguloExtra;
 
     roleta.style.transform = "rotate(" + anguloAtual + "deg)";
 
     setTimeout(() => {
-        resultado.innerText = opcoes[sorteio];
+        resultado.innerText = "Apresente-se: " + opcoes[sorteio];
         soltarConfete();
     }, 4000);
 }
@@ -156,7 +166,7 @@ function soltarConfete() {
         const confete = document.createElement("div");
         confete.className = "confete";
         confete.style.left = Math.random() * 100 + "vw";
-        confete.style.backgroundColor = 
+        confete.style.backgroundColor =
             ["#ff9999","#99ccff","#99ff99","#ffff99","#ffcc99","#cc99ff"]
             [Math.floor(Math.random() * 6)];
         document.body.appendChild(confete);
