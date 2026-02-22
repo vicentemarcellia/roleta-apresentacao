@@ -127,25 +127,26 @@ button{
 
 <script>
 const opcoes = [
-"💃 Dançar",
-"🤗 Abraçar",
+"💃 Dançando",
+"🤗 Abraço",
 "🐶 Animal favorito",
-"🦘 Pular",
+"🦘 Pule seu nome",
 "🤸 Faça 2 polichinelos",
 "❤️ Algo que ama"
 ];
 
 const roleta = document.getElementById("roleta");
-const resultado = document.getElementById("resultado");
 
 const total = opcoes.length;
 const anguloFatia = 360 / total;
-const raio = 120;
+const raio = 110;
 
 let anguloAtual = 0;
 let girando = false;
 
-// Criar textos
+// ==========================
+// CRIAR TEXTOS NAS FATIAS
+// ==========================
 for (let i = 0; i < total; i++) {
 
     const label = document.createElement("div");
@@ -153,44 +154,34 @@ for (let i = 0; i < total; i++) {
 
     const angulo = i * anguloFatia + anguloFatia / 2;
 
-    let rotacaoTexto = angulo;
-    if (angulo > 90 && angulo < 270) {
-        rotacaoTexto += 180;
-    }
-
     label.style.transform =
         `rotate(${angulo}deg)
          translate(${raio}px)
-         rotate(${rotacaoTexto - angulo}deg)
+         rotate(90deg)
          translate(-50%, -50%)`;
 
     label.innerText = opcoes[i];
     roleta.appendChild(label);
 }
 
+// ==========================
+// GIRAR
+// ==========================
 function girar() {
 
     if (girando) return;
 
     girando = true;
-    resultado.innerText = "";
 
     const giro = 360 * (5 + Math.random() * 3);
 
     anguloAtual += giro;
 
+    roleta.style.transition = "transform 4s ease-out";
     roleta.style.transform = `rotate(${anguloAtual}deg)`;
+
+    setTimeout(() => {
+        girando = false;
+    }, 4000);
 }
-
-roleta.addEventListener("transitionend", () => {
-
-    const anguloNormalizado = anguloAtual % 360;
-
-    const indice =
-        Math.floor((360 - anguloNormalizado) / anguloFatia) % total;
-
-    resultado.innerText = "🎉 Resultado: " + opcoes[indice];
-
-    girando = false;
-});
 </script>
