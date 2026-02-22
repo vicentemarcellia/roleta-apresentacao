@@ -43,6 +43,7 @@ h1 {
     border: 8px solid #ff9933;
     position: relative;
     transition: transform 4s ease-out;
+    transform: rotate(-90deg); /* 🔥 Alinha início no topo */
     background: conic-gradient(
         #ff9999 0deg 60deg,
         #99ccff 60deg 120deg,
@@ -55,13 +56,13 @@ h1 {
 
 .label {
     position: absolute;
-    width: 160px;
+    width: 140px;
     text-align: center;
     font-weight: bold;
     font-size: 14px;
     top: 50%;
     left: 50%;
-    transform-origin: center;
+    transform-origin: 0 0;
     pointer-events: none;
 }
 
@@ -82,20 +83,6 @@ button {
     font-weight: bold;
     color: #cc3300;
     min-height: 40px;
-}
-
-.confete {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    top: -10px;
-    animation: cair 3s linear forwards;
-}
-
-@keyframes cair {
-    to {
-        transform: translateY(100vh) rotate(720deg);
-    }
 }
 </style>
 </head>
@@ -127,7 +114,7 @@ const roleta = document.getElementById("roleta");
 const total = opcoes.length;
 const anguloFatia = 360 / total;
 
-// Criar textos centralizados corretamente
+// 🔥 Criar textos CENTRALIZADOS corretamente
 for (let i = 0; i < total; i++) {
 
     const label = document.createElement("div");
@@ -137,51 +124,39 @@ for (let i = 0; i < total; i++) {
 
     label.style.transform =
         `rotate(${angulo}deg)
-         translate(130px)
-         rotate(-${angulo - 90}deg)`;
+         translate(150px)
+         rotate(90deg)
+         translate(-50%, -50%)`;
 
     label.innerText = opcoes[i];
     roleta.appendChild(label);
 }
 
-let anguloAtual = 0;
+let anguloAtual = -90; // começa alinhado com topo
 
 function girar() {
 
     const resultado = document.getElementById("resultado");
     resultado.innerText = "";
 
-    const giroAleatorio = Math.random() * 360;
-    const voltas = 5 * 360;
+    const giro = 360 * 5 + Math.random() * 360;
 
-    anguloAtual += voltas + giroAleatorio;
+    anguloAtual += giro;
 
     roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
     setTimeout(() => {
 
-        // CALCULAR FATIA REAL APÓS PARAR
-        const anguloNormalizado = anguloAtual % 360;
-        const indice =
-            Math.floor((360 - anguloNormalizado) / anguloFatia) % total;
+        const anguloNormalizado =
+            ((anguloAtual % 360) + 360) % 360;
 
-        resultado.innerText = "🎉 Resultado: " + opcoes[indice];
-        soltarConfete();
+        const indice =
+            Math.floor(anguloNormalizado / anguloFatia) % total;
+
+        resultado.innerText =
+            "🎉 Resultado: " + opcoes[indice];
 
     }, 4000);
-}
-
-function soltarConfete() {
-    for (let i = 0; i < 60; i++) {
-        const confete = document.createElement("div");
-        confete.className = "confete";
-        confete.style.left = Math.random() * 100 + "vw";
-        confete.style.backgroundColor =
-            ["#ff9999","#99ccff","#99ff99","#ffff99","#ffcc99","#cc99ff"]
-            [Math.floor(Math.random() * 6)];
-        document.body.appendChild(confete);
-        setTimeout(() => confete.remove(), 3000);
-    }
 }
 </script>
 
