@@ -142,7 +142,10 @@ const total = opcoes.length;
 const anguloFatia = 360 / total;
 const raio = 120;
 
-// === CRIA OS TEXTOS ===
+let girando = false;
+let anguloAtual = 0;
+
+// ===== CRIAR TEXTOS =====
 for (let i = 0; i < total; i++) {
 
     const label = document.createElement("div");
@@ -165,32 +168,35 @@ for (let i = 0; i < total; i++) {
     roleta.appendChild(label);
 }
 
-// === GIRO CORRIGIDO 100% ===
+// ===== GIRAR =====
 function girar() {
 
+    if (girando) return;
+
+    girando = true;
     resultado.innerText = "";
 
-    const indice = Math.floor(Math.random() * total);
+    const giro = 360 * (5 + Math.random() * 3);
 
-    const voltas = 5 * 360;
+    anguloAtual += giro;
 
-    /*
-      EXPLICAÇÃO IMPORTANTE:
-      - A roleta começa em -90deg (por causa do conic-gradient)
-      - A seta está no topo (0deg visual)
-      - Precisamos compensar isso
-    */
-
-    const anguloCentroFatia =
-        (indice * anguloFatia) + (anguloFatia / 2);
-
-    const anguloFinal =
-        voltas + (450 - anguloCentroFatia);
-
-    roleta.style.transform = `rotate(${anguloFinal}deg)`;
-
-    setTimeout(() => {
-        resultado.innerText = "🎉 Resultado: " + opcoes[indice];
-    }, 4000);
+    roleta.style.transform = `rotate(${anguloAtual}deg)`;
 }
+
+// ===== QUANDO PARAR =====
+roleta.addEventListener("transitionend", () => {
+
+    // Pega ângulo real
+    const anguloNormalizado = anguloAtual % 360;
+
+    // Compensa o -90deg do conic-gradient
+    const anguloCorrigido = (anguloNormalizado + 90) % 360;
+
+    const indice =
+        Math.floor((360 - anguloCorrigido) / anguloFatia) % total;
+
+    resultado.innerText = "🎉 Resultado: " + opcoes[indice];
+
+    girando = false;
+});
 </script>
