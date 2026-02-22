@@ -42,7 +42,7 @@ h1{
     border-radius:50%;
     border:8px solid #f28c28;
     position:relative;
-    transition:transform 4s cubic-bezier(.17,.67,.83,.67);
+    transition:transform 4s ease-out;
     background:conic-gradient(
         #ff9999 0deg 60deg,
         #99ccff 60deg 120deg,
@@ -58,10 +58,10 @@ h1{
     top:50%;
     left:50%;
     transform-origin:0 0;
-    width:150px;
+    width:160px;
     text-align:center;
     font-weight:bold;
-    font-size:14px;
+    font-size:15px;
 }
 
 button{
@@ -110,19 +110,20 @@ const opcoes=[
 const roleta=document.getElementById("roleta");
 const total=opcoes.length;
 const anguloFatia=360/total;
+const raio=170; // meio da roleta visual
 
-// posicionar textos corretamente
+// POSICIONAR TEXTOS CENTRALIZADOS NA FATIA
 for(let i=0;i<total;i++){
 
     const label=document.createElement("div");
     label.className="label";
 
-    const angulo=i*anguloFatia+anguloFatia/2;
+    const angulo=i*anguloFatia + anguloFatia/2;
 
     label.style.transform=
     `rotate(${angulo}deg)
-     translate(150px)
-     rotate(90deg)
+     translate(${raio}px)
+     rotate(${angulo}deg)
      translate(-50%,-50%)`;
 
     label.innerText=opcoes[i];
@@ -140,9 +141,9 @@ function girar(){
 
     const voltas=5*360;
 
-    // ângulo exato para levar a fatia escolhida até o topo
+    // compensação da seta no topo (90°)
     const anguloDestino=
-        360-(indice*anguloFatia+anguloFatia/2);
+        270 - (indice*anguloFatia + anguloFatia/2);
 
     anguloAtual+=voltas+anguloDestino;
 
