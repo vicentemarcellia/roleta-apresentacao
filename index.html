@@ -55,13 +55,14 @@ h1 {
 
 .label {
     position: absolute;
-    width: 120px;
+    width: 150px;
     text-align: center;
     font-weight: bold;
     font-size: 14px;
     top: 50%;
     left: 50%;
-    transform-origin: 0 0;
+    transform-origin: center;
+    pointer-events: none;
 }
 
 button {
@@ -106,7 +107,6 @@ button {
 
 <div class="roleta-container">
     <div class="ponteiro"></div>
-
     <div id="roleta" class="roleta"></div>
 </div>
 
@@ -116,26 +116,27 @@ button {
 
 <script>
 const opcoes = [
-    "💃 Dançar",
-    "🤗 Abraçar",
-    "🐶 Animal",
-    "🦘 Pular",
-    "🤸 Polichinelo",
-    "❤️ Coração"
+    "💃 Apresente-se dançando",
+    "🤗 Cumprimente com abraço",
+    "🐶 Fale seu animal favorito",
+    "🦘 Pule dizendo seu nome",
+    "🤸 Faça 2 polichinelos",
+    "❤️ Diga algo que ama"
 ];
 
 const roleta = document.getElementById("roleta");
 
-// Criar textos corretamente posicionados
-for (let i = 0; i < 6; i++) {
+// Criar textos na diagonal e centralizados
+for (let i = 0; i < opcoes.length; i++) {
     const label = document.createElement("div");
     label.className = "label";
 
-    const angulo = i * 60 + 30; // centraliza no meio da fatia
+    const angulo = i * 60 + 30;
+
     label.style.transform = `
         rotate(${angulo}deg)
-        translate(140px)
-        rotate(-${angulo}deg)
+        translate(120px)
+        rotate(45deg)
     `;
 
     label.innerText = opcoes[i];
@@ -148,15 +149,19 @@ function girar() {
     const resultado = document.getElementById("resultado");
     resultado.innerText = "";
 
-    const sorteio = Math.floor(Math.random() * 6);
+    const sorteio = Math.floor(Math.random() * opcoes.length);
 
-    const anguloExtra = 360 * 5 + (360 - sorteio * 60 - 30);
-    anguloAtual += anguloExtra;
+    const anguloPorFatia = 360 / opcoes.length;
+    const anguloFinal =
+        360 * 5 +
+        (360 - (sorteio * anguloPorFatia + anguloPorFatia / 2));
 
-    roleta.style.transform = "rotate(" + anguloAtual + "deg)";
+    anguloAtual += anguloFinal;
+
+    roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
     setTimeout(() => {
-        resultado.innerText = "Apresente-se: " + opcoes[sorteio];
+        resultado.innerText = "🎉 Resultado: " + opcoes[sorteio];
         soltarConfete();
     }, 4000);
 }
