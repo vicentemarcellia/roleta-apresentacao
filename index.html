@@ -142,10 +142,10 @@ const total = opcoes.length;
 const anguloFatia = 360 / total;
 const raio = 120;
 
-let girando = false;
 let anguloAtual = 0;
+let girando = false;
 
-// ===== CRIAR TEXTOS =====
+// Criar textos
 for (let i = 0; i < total; i++) {
 
     const label = document.createElement("div");
@@ -168,7 +168,6 @@ for (let i = 0; i < total; i++) {
     roleta.appendChild(label);
 }
 
-// ===== GIRAR =====
 function girar() {
 
     if (girando) return;
@@ -183,17 +182,12 @@ function girar() {
     roleta.style.transform = `rotate(${anguloAtual}deg)`;
 }
 
-// ===== QUANDO PARAR =====
 roleta.addEventListener("transitionend", () => {
 
-    // Pega ângulo real
     const anguloNormalizado = anguloAtual % 360;
 
-    // Compensa o -90deg do conic-gradient
-    const anguloCorrigido = (anguloNormalizado + 90) % 360;
-
     const indice =
-        Math.floor((360 - anguloCorrigido) / anguloFatia) % total;
+        Math.floor((360 - anguloNormalizado) / anguloFatia) % total;
 
     resultado.innerText = "🎉 Resultado: " + opcoes[indice];
 
