@@ -55,7 +55,7 @@ h1 {
 
 .label {
     position: absolute;
-    width: 150px;
+    width: 160px;
     text-align: center;
     font-weight: bold;
     font-size: 14px;
@@ -84,7 +84,6 @@ button {
     min-height: 40px;
 }
 
-/* Confete */
 .confete {
     position: fixed;
     width: 8px;
@@ -125,19 +124,21 @@ const opcoes = [
 ];
 
 const roleta = document.getElementById("roleta");
+const total = opcoes.length;
+const anguloFatia = 360 / total;
 
-// Criar textos na diagonal e centralizados
-for (let i = 0; i < opcoes.length; i++) {
+// Criar textos centralizados corretamente
+for (let i = 0; i < total; i++) {
+
     const label = document.createElement("div");
     label.className = "label";
 
-    const angulo = i * 60 + 30;
+    const angulo = i * anguloFatia + anguloFatia / 2;
 
-    label.style.transform = `
-        rotate(${angulo}deg)
-        translate(120px)
-        rotate(45deg)
-    `;
+    label.style.transform =
+        `rotate(${angulo}deg)
+         translate(130px)
+         rotate(-${angulo - 90}deg)`;
 
     label.innerText = opcoes[i];
     roleta.appendChild(label);
@@ -146,23 +147,27 @@ for (let i = 0; i < opcoes.length; i++) {
 let anguloAtual = 0;
 
 function girar() {
+
     const resultado = document.getElementById("resultado");
     resultado.innerText = "";
 
-    const sorteio = Math.floor(Math.random() * opcoes.length);
+    const giroAleatorio = Math.random() * 360;
+    const voltas = 5 * 360;
 
-    const anguloPorFatia = 360 / opcoes.length;
-    const anguloFinal =
-        360 * 5 +
-        (360 - (sorteio * anguloPorFatia + anguloPorFatia / 2));
-
-    anguloAtual += anguloFinal;
+    anguloAtual += voltas + giroAleatorio;
 
     roleta.style.transform = `rotate(${anguloAtual}deg)`;
 
     setTimeout(() => {
-        resultado.innerText = "🎉 Resultado: " + opcoes[sorteio];
+
+        // CALCULAR FATIA REAL APÓS PARAR
+        const anguloNormalizado = anguloAtual % 360;
+        const indice =
+            Math.floor((360 - anguloNormalizado) / anguloFatia) % total;
+
+        resultado.innerText = "🎉 Resultado: " + opcoes[indice];
         soltarConfete();
+
     }, 4000);
 }
 
