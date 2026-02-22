@@ -9,7 +9,7 @@
 body{
     text-align:center;
     font-family:Arial;
-    background:#e6e6e6;
+    background:#dcdcdc;
 }
 
 h1{
@@ -32,7 +32,7 @@ h1{
     height:0;
     border-left:18px solid transparent;
     border-right:18px solid transparent;
-    border-top:35px solid #ff0000;
+    border-top:35px solid red;
     z-index:10;
 }
 
@@ -44,12 +44,12 @@ h1{
     transition:transform 4s cubic-bezier(.17,.67,.83,.67);
     background:conic-gradient(
         from -90deg,
-        #ff5f5f 0deg 60deg,
-        #ffd93d 60deg 120deg,
-        #6bcB77 120deg 180deg,
-        #4d96ff 180deg 240deg,
-        #c77dff 240deg 300deg,
-        #ff9f1c 300deg 360deg
+        #f8961e 0deg 60deg,
+        #f94144 60deg 120deg,
+        #f9c74f 120deg 180deg,
+        #90be6d 180deg 240deg,
+        #577bd8 240deg 300deg,
+        #b76bd6 300deg 360deg
     );
     box-shadow:
         inset 0 0 40px rgba(0,0,0,0.2),
@@ -61,7 +61,7 @@ h1{
     width:100%;
     height:100%;
     border-radius:50%;
-    border:12px solid #00b4d8;
+    border:14px solid #0aaecf;
     box-sizing:border-box;
 }
 
@@ -82,10 +82,10 @@ h1{
     top:50%;
     left:50%;
     transform-origin:0 0;
-    width:160px;
+    width:130px;
     text-align:center;
     font-weight:bold;
-    font-size:15px;
+    font-size:14px;
     color:#000;
 }
 
@@ -127,12 +127,12 @@ button{
 
 <script>
 const opcoes = [
-"💃 Apresente-se dançando",
-"🤗 Cumprimente com abraço",
-"🐶 Fale seu animal favorito",
-"🦘 Pule dizendo seu nome",
+"💃 Dançando",
+"🤗 Abraço",
+"🐶 Animal favorito",
+"🦘 Pule seu nome",
 "🤸 Faça 2 polichinelos",
-"❤️ Diga algo que ama"
+"❤️ Algo que ama"
 ];
 
 const roleta = document.getElementById("roleta");
@@ -140,9 +140,9 @@ const resultado = document.getElementById("resultado");
 
 const total = opcoes.length;
 const anguloFatia = 360 / total;
-const raio = 160;
+const raio = 120; // texto mais para dentro
 
-// Criar textos corretamente posicionados
+// Criar textos posicionados corretamente
 for (let i = 0; i < total; i++) {
 
     const label = document.createElement("div");
@@ -150,8 +150,8 @@ for (let i = 0; i < total; i++) {
 
     const angulo = i * anguloFatia + anguloFatia / 2;
 
-    // Corrige texto virado
     let rotacaoTexto = angulo;
+
     if (angulo > 90 && angulo < 270) {
         rotacaoTexto += 180;
     }
@@ -166,25 +166,27 @@ for (let i = 0; i < total; i++) {
     roleta.appendChild(label);
 }
 
-let anguloAtual = 0;
-
+// Função corrigida (sem acumular ângulo)
 function girar() {
 
     resultado.innerText = "";
 
     const indice = Math.floor(Math.random() * total);
 
-    // ângulo para alinhar exatamente na seta (que está no topo)
-    const anguloParaSeta = 360 - (indice * anguloFatia + anguloFatia / 2);
+    const anguloParaSeta =
+        360 - (indice * anguloFatia + anguloFatia / 2);
 
     const voltas = 5 * 360;
 
-    anguloAtual += voltas + anguloParaSeta;
+    const anguloFinal = voltas + anguloParaSeta;
 
-    roleta.style.transform = `rotate(${anguloAtual}deg)`;
+    roleta.style.transform = `rotate(${anguloFinal}deg)`;
 
     setTimeout(() => {
         resultado.innerText = "🎉 Resultado: " + opcoes[indice];
     }, 4000);
 }
 </script>
+
+</body>
+</html>
